@@ -40,7 +40,7 @@ public class IndexCreation {
         Instant start = Instant.now();
 
         //Input Folder (Files)
-        String DOCUMENT_DIRECTORY = "C:\\IR\\Exc7";
+        String DOCUMENT_DIRECTORY = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Data\\aclImdb\\train\\neg";
 
         File Folder = new File(DOCUMENT_DIRECTORY);
         int fileCount = Folder.list().length;
@@ -49,7 +49,7 @@ public class IndexCreation {
         System.out.println("Please Wait...");
 
         //Output folder (Index)
-        String INDEX_DIRECTORY = "C:\\IR\\CA\\labworkIndex";
+        String INDEX_DIRECTORY = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Index";
 
         //Input Path Variable
         final Path DOCUMENT_DIRECTORY_PATH = Paths.get(DOCUMENT_DIRECTORY);

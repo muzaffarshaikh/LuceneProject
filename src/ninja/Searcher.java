@@ -22,19 +22,9 @@ import org.apache.lucene.store.FSDirectory;
  * @author Muzaffar
  */
 public class Searcher {
-    
+
     //directory contains the lucene indexes
     private static final String INDEX_DIR = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Index";
-
-    public static TopDocs searchInContent(String textToFind, IndexSearcher searcher) throws Exception {
-        //Create search query
-        QueryParser qp = new QueryParser("contents", new StandardAnalyzer());
-        Query query = qp.parse(textToFind);
-
-        //search the index
-        TopDocs hits = searcher.search(query, 10);
-        return hits;
-    }
 
     public static IndexSearcher createSearcher() throws IOException {
         Directory dir = FSDirectory.open(Paths.get(INDEX_DIR));
@@ -45,6 +35,16 @@ public class Searcher {
         //Index searcher
         IndexSearcher searcher = new IndexSearcher(reader);
         return searcher;
+    }
+
+    public static TopDocs searchInContent(String textToFind, IndexSearcher searcher) throws Exception {
+        //Create search query
+        QueryParser qp = new QueryParser("contents", new StandardAnalyzer());
+        Query query = qp.parse(textToFind);
+
+        //search the index
+        TopDocs hits = searcher.search(query, 10);
+        return hits;
     }
 
 }
