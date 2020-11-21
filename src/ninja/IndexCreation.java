@@ -21,9 +21,11 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
@@ -38,7 +40,7 @@ public class IndexCreation {
         Instant start = Instant.now();
 
         //Input Folder (Files)
-        String DOCUMENT_DIRECTORY = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Data\\aclImdb\\train\\neg";
+        String DOCUMENT_DIRECTORY = "C:\\IR\\Exc7";
 
         File Folder = new File(DOCUMENT_DIRECTORY);
         int fileCount = Folder.list().length;
@@ -47,7 +49,7 @@ public class IndexCreation {
         System.out.println("Please Wait...");
 
         //Output folder (Index)
-        String INDEX_DIRECTORY = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Index";
+        String INDEX_DIRECTORY = "C:\\IR\\CA\\labworkIndex";
 
         //Input Path Variable
         final Path DOCUMENT_DIRECTORY_PATH = Paths.get(DOCUMENT_DIRECTORY);
@@ -108,13 +110,29 @@ public class IndexCreation {
     }
 
     static void indexDocument(IndexWriter writer, Path file, long lastModified) throws IOException {
+        
+        FieldType fieldTypeText = new FieldType();
+        fieldTypeText.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
+        fieldTypeText.setStoreTermVectors( true );
+        fieldTypeText.setStoreTermVectorPositions( true );
+        fieldTypeText.setTokenized( true );
+        fieldTypeText.setStored( true );
+        fieldTypeText.freeze();
+        
+        
         try (InputStream stream = Files.newInputStream(file)) {
             //Create lucene Document
             Document doc = new Document();
 
-            doc.add(new StringField("path", file.toString(), Field.Store.YES));
-            doc.add(new LongPoint("modified", lastModified));
-            doc.add(new TextField("contents", new String(Files.readAllBytes(file)), Store.YES));
+            
+            
+            
+            doc.add(new Field("path", file.toString(), fieldTypeText));
+                    //new StringField("path", file.toString(), Field.Store.YES));
+            doc.add(new Field("modified", lastModified + "", fieldTypeText));
+            doc.add(new Field("contents", new String(Files.readAllBytes(file)), fieldTypeText));
+            ///doc.add(new LongPoint("modified", lastModified));
+            //doc.add(new TextField("contents", new String(Files.readAllBytes(file)), Store.YES));
 
             //Updates a document by first deleting the document(s) 
             //containing <code>term</code> and then adding the new
