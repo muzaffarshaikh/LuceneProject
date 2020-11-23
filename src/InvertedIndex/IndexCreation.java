@@ -137,8 +137,8 @@ public class IndexCreation {
             //doc.add(new TextField("contents", new String(Files.readAllBytes(file)), Store.YES));
 
             //Updates a document by first deleting the document(s) 
-            //containing <code>term</code> and then adding the new
-            //document.  The delete and then add are atomic as seen
+            //then adding the new document.
+            //The delete and then add are atomic as seen
             //by a reader on the same index
             writer.updateDocument(new Term("path", file.toString()), doc);
         }
