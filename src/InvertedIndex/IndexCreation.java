@@ -40,6 +40,8 @@ public class IndexCreation {
         Instant start = Instant.now();
 
         //Input Folder (Files)
+        // Please Download the dataset from the below link
+        // http://ai.stanford.edu/~amaas/data/sentiment/
         String DOCUMENT_DIRECTORY = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Data\\aclImdb\\train\\neg";
 
         File Folder = new File(DOCUMENT_DIRECTORY);
