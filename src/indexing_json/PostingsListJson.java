@@ -14,12 +14,6 @@ import java.util.Scanner;
 import java.util.Set;
 import org.apache.lucene.index.MultiTerms;
 
-/**
- * This is an example for accessing a term-document-position posting list from a Lucene index.
- *
- * @author Jiepu Jiang (jiepu@cs.vt.edu)
- * @version 2018-08-21
- */
 public class PostingsListJson {
 
     public static void main( String[] args ) throws IOException {
