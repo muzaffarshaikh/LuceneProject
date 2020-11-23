@@ -112,7 +112,7 @@ public class IndexCreation {
     static void indexDocument(IndexWriter writer, Path file) throws IOException {
         
         FieldType fieldTypeText = new FieldType();
-        fieldTypeText.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS );
+        fieldTypeText.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
         fieldTypeText.setTokenized( true );
         fieldTypeText.setStored( true );
         fieldTypeText.freeze();
@@ -154,7 +154,7 @@ public class IndexCreation {
                         //Index this file
                         indexDocument(writer, file);
                     } catch (IOException ioe) {
-                    }
+                    }//Continue. When returned from a preVisitDirectory method then the entries in the directory should also be visited.
                     return FileVisitResult.CONTINUE;
                 }
             });

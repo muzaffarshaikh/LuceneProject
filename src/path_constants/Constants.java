@@ -12,7 +12,7 @@ package path_constants;
 public class Constants {
     
     // change the following input and output paths to your local ones
-    public static final String FILE_PATH_MOVIES = "C:\\Lucene\\Data\\Movies";
+    public static final String FILE_PATH_MOVIES = "C:\\Lucene\\Data\\Movies\\25k";
 
     // modify to your index path
     public static final String INDEX_PATH_MOVIES = "C:\\Lucene\\Index\\index_movies";

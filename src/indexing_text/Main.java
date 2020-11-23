@@ -14,6 +14,7 @@ public class Main {
 
         Searcher search = new Searcher();
         IndexSearcher searcher = search.getSearcher();
+        //searcher.setSimilarity(new BM25Similarity());
 
         Scanner sc = new Scanner(System.in);
 
