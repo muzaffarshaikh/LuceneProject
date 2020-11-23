@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InvertedIndex;
+package indexing_text;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -26,7 +26,7 @@ public class Searcher {
     //directory contains the lucene indexes
     private static final String INDEX_DIR = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Index";
 
-    public IndexSearcher createSearcher() throws IOException {
+    public IndexSearcher getSearcher() throws IOException {
         Directory dir = FSDirectory.open(Paths.get(INDEX_DIR));
 
         //It is an interface for accessing a point-in-time view of a lucene index

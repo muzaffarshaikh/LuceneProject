@@ -1,4 +1,4 @@
-package InvertedIndex;
+package indexing_text;
 
 import java.util.Scanner;
 
@@ -13,7 +13,7 @@ public class Main {
         //Create lucene searcher. It search over a single IndexReader.
 
         Searcher search = new Searcher();
-        IndexSearcher searcher = search.createSearcher();
+        IndexSearcher searcher = search.getSearcher();
 
         Scanner sc = new Scanner(System.in);
 
@@ -28,7 +28,7 @@ public class Main {
             //Total found documents
             System.out.println("Total Results :: " + foundDocs.totalHits);
 
-            //Let's print out the path of files which have searched term
+            //printing out the path of files which have searched term
             for (ScoreDoc sd : foundDocs.scoreDocs) {
                 Document d = searcher.doc(sd.doc);
                 System.out.println("Path : " + d.get("path") + ", Score : " + sd.score);

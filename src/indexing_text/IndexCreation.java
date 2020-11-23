@@ -1,4 +1,4 @@
-package InvertedIndex;
+package indexing_text;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,15 +16,10 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.LongPoint;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -32,6 +27,7 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import path_constants.Constants;
 
 public class IndexCreation {
 
@@ -42,7 +38,7 @@ public class IndexCreation {
         //Input Folder (Files)
         // Please Download the dataset from the below link
         // http://ai.stanford.edu/~amaas/data/sentiment/
-        String DOCUMENT_DIRECTORY = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Data\\aclImdb\\train\\neg";
+        String DOCUMENT_DIRECTORY = Constants.FILE_PATH_MOVIES;
 
         File Folder = new File(DOCUMENT_DIRECTORY);
         int fileCount = Folder.list().length;
@@ -51,7 +47,7 @@ public class IndexCreation {
         System.out.println("Please Wait...");
 
         //Output folder (Index)
-        String INDEX_DIRECTORY = "C:\\Users\\Muzaffar\\Desktop\\LuceneTest\\Index";
+        String INDEX_DIRECTORY = Constants.INDEX_PATH_MOVIES;
 
         //Input Path Variable
         final Path DOCUMENT_DIRECTORY_PATH = Paths.get(DOCUMENT_DIRECTORY);
@@ -80,7 +76,7 @@ public class IndexCreation {
                     ts = new TokenStreamComponents(ts.getSource(), new StopFilter(ts.getTokenStream(), EnglishAnalyzer.ENGLISH_STOP_WORDS_SET));
 
                     // Stemming
-                    ts = new TokenStreamComponents(ts.getSource(), new PorterStemFilter(ts.getTokenStream()));
+                    //ts = new TokenStreamComponents(ts.getSource(), new PorterStemFilter(ts.getTokenStream()));
                     // ts = new TokenStreamComponents( ts.getTokenizer(), new KStemFilter( ts.getTokenStream() ) );
 
                     return ts;
@@ -99,40 +95,41 @@ public class IndexCreation {
             indexAllDocuments(writer, DOCUMENT_DIRECTORY_PATH);
 
             writer.close();
+            Instant end = Instant.now();
+            System.out.println("\nIndex Created.");
+            
+            Duration interval = Duration.between(start, end);
+            
+            System.out.println("Time Taken : " + interval.getSeconds() + " Seconds");
+            
         } catch (IOException e) {
+            
+            System.out.println("Error While Indexing" +e);
+            
         }
-
-        Instant end = Instant.now();
-        System.out.println("\nIndex Created.");
-
-        Duration interval = Duration.between(start, end);
-
-        System.out.println("Time Taken : " + interval.getSeconds() + " Seconds");
-
     }
 
-    static void indexDocument(IndexWriter writer, Path file, long lastModified) throws IOException {
+    static void indexDocument(IndexWriter writer, Path file) throws IOException {
         
         FieldType fieldTypeText = new FieldType();
         fieldTypeText.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS );
-        fieldTypeText.setStoreTermVectors( true );
-        fieldTypeText.setStoreTermVectorPositions( true );
         fieldTypeText.setTokenized( true );
         fieldTypeText.setStored( true );
         fieldTypeText.freeze();
         
         
         try (InputStream stream = Files.newInputStream(file)) {
-            //Create lucene Document
+            
+            //Creates lucene Document
             Document doc = new Document();
-
             
-            
-            
+            //field is a section of a Document.
             doc.add(new Field("path", file.toString(), fieldTypeText));
-                    //new StringField("path", file.toString(), Field.Store.YES));
-            doc.add(new Field("modified", lastModified + "", fieldTypeText));
             doc.add(new Field("contents", new String(Files.readAllBytes(file)), fieldTypeText));
+            
+            writer.updateDocument(new Term("path", file.toString()), doc);
+            
+            //new StringField("path", file.toString(), Field.Store.YES));
             ///doc.add(new LongPoint("modified", lastModified));
             //doc.add(new TextField("contents", new String(Files.readAllBytes(file)), Store.YES));
 
@@ -140,7 +137,8 @@ public class IndexCreation {
             //then adding the new document.
             //The delete and then add are atomic as seen
             //by a reader on the same index
-            writer.updateDocument(new Term("path", file.toString()), doc);
+            
+            
         }
     }
 
@@ -154,7 +152,7 @@ public class IndexCreation {
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     try {
                         //Index this file
-                        indexDocument(writer, file, attrs.lastModifiedTime().toMillis());
+                        indexDocument(writer, file);
                     } catch (IOException ioe) {
                     }
                     return FileVisitResult.CONTINUE;
@@ -162,7 +160,7 @@ public class IndexCreation {
             });
         } else {
             //Index this file
-            indexDocument(writer, path, Files.getLastModifiedTime(path).toMillis());
+            indexDocument(writer, path);
         }
     }
 }
