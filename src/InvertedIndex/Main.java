@@ -1,4 +1,4 @@
-package ninja;
+package InvertedIndex;
 
 import java.util.Scanner;
 

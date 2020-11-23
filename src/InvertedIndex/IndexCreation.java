@@ -1,4 +1,4 @@
-package ninja;
+package InvertedIndex;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,7 +112,7 @@ public class IndexCreation {
     static void indexDocument(IndexWriter writer, Path file, long lastModified) throws IOException {
         
         FieldType fieldTypeText = new FieldType();
-        fieldTypeText.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
+        fieldTypeText.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS );
         fieldTypeText.setStoreTermVectors( true );
         fieldTypeText.setStoreTermVectorPositions( true );
         fieldTypeText.setTokenized( true );
